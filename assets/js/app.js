@@ -19,7 +19,7 @@ function renderProjects(category="all"){
  else if(pics.length===2)gallery='<div class="project-gallery two '+ratioClass+'">'+pics.map((src,i)=>'<img src="'+safeText(src)+'" alt="'+safeText(p.name)+' — foto '+(i+1)+'" loading="lazy">').join("")+'</div>';
  else if(pics.length>2)gallery='<div class="project-gallery swipe '+ratioClass+'" aria-label="Galeri foto '+safeText(p.name)+'">'+pics.map((src,i)=>'<img src="'+safeText(src)+'" alt="'+safeText(p.name)+' — foto '+(i+1)+'" loading="lazy">').join("")+'</div>';
  else gallery='<div class="project-art"><span class="art-label">'+safeText(p.categoryLabel)+'</span><span class="art-monogram">'+safeText(p.art||p.name.slice(0,3).toUpperCase())+'</span></div>';
- return '<article class="project-card">'+gallery+'<div class="project-info"><div class="project-meta"><span>'+safeText(p.categoryLabel)+'</span><span class="project-status">'+safeText(p.status)+'</span></div><h3>'+safeText(p.name)+'</h3>'+(p.description?'<p>'+safeText(p.description)+'</p>':'')+'<div class="project-links">'+(p.url&&!p.is_private?'<a href="'+safeText(p.url)+'" target="_blank" rel="noopener">View project <span>↗</span></a>':(p.is_private?'<span class="project-status">Private project</span>':'<span class="project-status">Live link coming soon</span>'))+'</div></div></article>'
+ return '<article class="project-card">'+gallery+'<div class="project-info"><div class="project-meta"><span>'+safeText(p.categoryLabel)+'</span><span class="project-status">'+safeText(p.status)+'</span></div><h3>'+safeText(p.name)+'</h3>'+(p.description?'<div class="project-description-preview"><p>'+safeText(String(p.description).length>190?String(p.description).slice(0,190).trimEnd()+"…":p.description)+'</p>'+(String(p.description).length>190?'<button class="description-more" type="button" data-description-id="'+safeText(p.id)+'">Lihat seluruh deskripsi</button>':'')+'</div>':'')+'<div class="project-links">'+(p.url&&!p.is_private?'<a href="'+safeText(p.url)+'" target="_blank" rel="noopener">View project <span>↗</span></a>':(p.is_private?'<span class="project-status">Private project</span>':'<span class="project-status">Live link coming soon</span>'))+'</div></div></article>'
  }).join("");
 }
 async function loadPublicProjects(){try{
@@ -35,4 +35,11 @@ async function loadPublicProjects(){try{
 filters?.addEventListener("click",event=>{const button=event.target.closest("[data-filter]");if(!button)return;filters.querySelectorAll(".filter-chip").forEach(chip=>chip.classList.toggle("active",chip===button));renderProjects(button.dataset.filter)});
 menuToggle?.addEventListener("click",()=>{const open=mainNav.classList.toggle("open");menuToggle.setAttribute("aria-expanded",String(open))});
 mainNav?.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{mainNav.classList.remove("open");menuToggle?.setAttribute("aria-expanded","false")}));
+
+const descriptionModal=document.querySelector("#descriptionModal"),descriptionModalTitle=document.querySelector("#descriptionModalTitle"),descriptionModalBody=document.querySelector("#descriptionModalBody");
+grid?.addEventListener("click",event=>{const button=event.target.closest("[data-description-id]");if(!button)return;const project=projects.find(p=>String(p.id)===button.dataset.descriptionId);if(!project)return;descriptionModalTitle.textContent=project.name;descriptionModalBody.textContent=project.description||"";descriptionModal.hidden=false;document.body.classList.add("modal-open")});
+function closeDescriptionModal(){if(descriptionModal){descriptionModal.hidden=true;document.body.classList.remove("modal-open")}}
+document.querySelector("#descriptionModalClose")?.addEventListener("click",closeDescriptionModal);
+descriptionModal?.addEventListener("click",event=>{if(event.target===descriptionModal)closeDescriptionModal()});
+document.addEventListener("keydown",event=>{if(event.key==="Escape")closeDescriptionModal()});
 const year=document.querySelector("#year");if(year)year.textContent=new Date().getFullYear();renderFilters();renderProjects();loadPublicProjects();

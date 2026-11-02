@@ -1,6 +1,6 @@
--- LEOOSTORE.id Portfolio — initial Supabase schema
--- Run this in Supabase SQL Editor after creating your project.
--- Auth users are managed through Supabase Auth. This table stores portfolio content.
+-- LEOOSTORE.id Portfolio — Supabase schema
+-- Run in Supabase SQL Editor. Create the owner account in Auth first,
+-- then add its UUID to portfolio_admins using the SQL snippet in README.md.
 
 create extension if not exists pgcrypto;
 
@@ -32,13 +32,19 @@ create table if not exists public.portfolio_testimonials (
   created_at timestamptz not null default now()
 );
 
+-- Explicit allowlist: only user IDs added here are portfolio administrators.
+create table if not exists public.portfolio_admins (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+
 create index if not exists portfolio_projects_public_order
   on public.portfolio_projects (status, sort_order, created_at desc);
 
 alter table public.portfolio_projects enable row level security;
 alter table public.portfolio_testimonials enable row level security;
+alter table public.portfolio_admins enable row level security;
 
--- Public visitors can read only published portfolio projects and testimonials.
 drop policy if exists "Public can read published projects" on public.portfolio_projects;
 create policy "Public can read published projects"
   on public.portfolio_projects for select
@@ -49,23 +55,28 @@ create policy "Public can read published testimonials"
   on public.portfolio_testimonials for select
   using (is_published = true);
 
--- Authenticated users can manage content in this first-owner-only setup.
--- For production, restrict writes to a dedicated admin identity/role.
-drop policy if exists "Authenticated admins can manage projects" on public.portfolio_projects;
-create policy "Authenticated admins can manage projects"
+drop policy if exists "Admins can manage projects" on public.portfolio_projects;
+create policy "Admins can manage projects"
   on public.portfolio_projects for all
   to authenticated
-  using (auth.uid() is not null)
-  with check (auth.uid() is not null);
+  using (exists (select 1 from public.portfolio_admins a where a.user_id = auth.uid()))
+  with check (exists (select 1 from public.portfolio_admins a where a.user_id = auth.uid()));
 
-drop policy if exists "Authenticated admins can manage testimonials" on public.portfolio_testimonials;
-create policy "Authenticated admins can manage testimonials"
+drop policy if exists "Admins can manage testimonials" on public.portfolio_testimonials;
+create policy "Admins can manage testimonials"
   on public.portfolio_testimonials for all
   to authenticated
-  using (auth.uid() is not null)
-  with check (auth.uid() is not null);
+  using (exists (select 1 from public.portfolio_admins a where a.user_id = auth.uid()))
+  with check (exists (select 1 from public.portfolio_admins a where a.user_id = auth.uid()));
 
--- Create a public Storage bucket for portfolio thumbnails.
+-- Admins can read only their own membership row. No client policy permits
+-- inserting, updating, or deleting admin memberships.
+drop policy if exists "Admins can read own membership" on public.portfolio_admins;
+create policy "Admins can read own membership"
+  on public.portfolio_admins for select
+  to authenticated
+  using (user_id = auth.uid());
+
 insert into storage.buckets (id, name, public)
 values ('portfolio-thumbnails', 'portfolio-thumbnails', true)
 on conflict (id) do nothing;
@@ -75,21 +86,33 @@ create policy "Public can view portfolio thumbnails"
   on storage.objects for select
   using (bucket_id = 'portfolio-thumbnails');
 
-drop policy if exists "Authenticated users can upload portfolio thumbnails" on storage.objects;
-create policy "Authenticated users can upload portfolio thumbnails"
+drop policy if exists "Admins can upload portfolio thumbnails" on storage.objects;
+create policy "Admins can upload portfolio thumbnails"
   on storage.objects for insert
   to authenticated
-  with check (bucket_id = 'portfolio-thumbnails' and auth.uid() is not null);
+  with check (
+    bucket_id = 'portfolio-thumbnails'
+    and exists (select 1 from public.portfolio_admins a where a.user_id = auth.uid())
+  );
 
-drop policy if exists "Authenticated users can update portfolio thumbnails" on storage.objects;
-create policy "Authenticated users can update portfolio thumbnails"
+drop policy if exists "Admins can update portfolio thumbnails" on storage.objects;
+create policy "Admins can update portfolio thumbnails"
   on storage.objects for update
   to authenticated
-  using (bucket_id = 'portfolio-thumbnails' and auth.uid() is not null)
-  with check (bucket_id = 'portfolio-thumbnails' and auth.uid() is not null);
+  using (
+    bucket_id = 'portfolio-thumbnails'
+    and exists (select 1 from public.portfolio_admins a where a.user_id = auth.uid())
+  )
+  with check (
+    bucket_id = 'portfolio-thumbnails'
+    and exists (select 1 from public.portfolio_admins a where a.user_id = auth.uid())
+  );
 
-drop policy if exists "Authenticated users can delete portfolio thumbnails" on storage.objects;
-create policy "Authenticated users can delete portfolio thumbnails"
+drop policy if exists "Admins can delete portfolio thumbnails" on storage.objects;
+create policy "Admins can delete portfolio thumbnails"
   on storage.objects for delete
   to authenticated
-  using (bucket_id = 'portfolio-thumbnails' and auth.uid() is not null);
+  using (
+    bucket_id = 'portfolio-thumbnails'
+    and exists (select 1 from public.portfolio_admins a where a.user_id = auth.uid())
+  );

@@ -14,17 +14,17 @@ function renderProjects(category="all"){
  if(!grid)return;const visible=projects.filter(p=>category==="all"||p.category===category);
  if(!visible.length){grid.innerHTML='<div class="empty-state">Belum ada project di kategori ini.</div>';return}
  grid.innerHTML=visible.map(p=>{
- const pics=p.images||[];let gallery="";
- if(pics.length===1)gallery='<div class="project-art"><img src="'+safeText(pics[0])+'" alt="'+safeText(p.name)+'" loading="lazy"></div>';
- else if(pics.length===2)gallery='<div class="project-gallery two">'+pics.map((src,i)=>'<img src="'+safeText(src)+'" alt="'+safeText(p.name)+' — foto '+(i+1)+'" loading="lazy">').join("")+'</div>';
- else if(pics.length>2)gallery='<div class="project-gallery swipe" aria-label="Galeri foto '+safeText(p.name)+'">'+pics.map((src,i)=>'<img src="'+safeText(src)+'" alt="'+safeText(p.name)+' — foto '+(i+1)+'" loading="lazy">').join("")+'</div>';
+ const pics=p.images||[];const ratioClass=p.image_aspect_ratio==="9:16"?"ratio-9-16":p.image_aspect_ratio==="1:1"?"ratio-1-1":"ratio-16-9";let gallery="";
+ if(pics.length===1)gallery='<div class="project-art '+ratioClass+'"><img src="'+safeText(pics[0])+'" alt="'+safeText(p.name)+'" loading="lazy"></div>';
+ else if(pics.length===2)gallery='<div class="project-gallery two '+ratioClass+'">'+pics.map((src,i)=>'<img src="'+safeText(src)+'" alt="'+safeText(p.name)+' — foto '+(i+1)+'" loading="lazy">').join("")+'</div>';
+ else if(pics.length>2)gallery='<div class="project-gallery swipe '+ratioClass+'" aria-label="Galeri foto '+safeText(p.name)+'">'+pics.map((src,i)=>'<img src="'+safeText(src)+'" alt="'+safeText(p.name)+' — foto '+(i+1)+'" loading="lazy">').join("")+'</div>';
  else gallery='<div class="project-art"><span class="art-label">'+safeText(p.categoryLabel)+'</span><span class="art-monogram">'+safeText(p.art||p.name.slice(0,3).toUpperCase())+'</span></div>';
  return '<article class="project-card">'+gallery+'<div class="project-info"><div class="project-meta"><span>'+safeText(p.categoryLabel)+'</span><span class="project-status">'+safeText(p.status)+'</span></div><h3>'+safeText(p.name)+'</h3>'+(p.description?'<p>'+safeText(p.description)+'</p>':'')+'<div class="project-links">'+(p.url&&!p.is_private?'<a href="'+safeText(p.url)+'" target="_blank" rel="noopener">View project <span>↗</span></a>':(p.is_private?'<span class="project-status">Private project</span>':'<span class="project-status">Live link coming soon</span>'))+'</div></div></article>'
  }).join("");
 }
 async function loadPublicProjects(){try{
  const [projectResult,categoryResult]=await Promise.all([
- db.from("portfolio_projects").select("id,name,category,category_label,description,status,url,image_path,image_paths,is_private,sort_order").eq("is_published",true).order("sort_order").order("created_at",{ascending:false}),
+ db.from("portfolio_projects").select("id,name,category,category_label,description,status,url,image_path,image_paths,image_aspect_ratio,is_private,sort_order").eq("is_published",true).order("sort_order").order("created_at",{ascending:false}),
  db.from("portfolio_categories").select("slug,label,sort_order").eq("is_active",true).order("sort_order").order("label")
  ]);
  if(projectResult.error)throw projectResult.error;

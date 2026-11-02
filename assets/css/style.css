@@ -12,6 +12,7 @@
 }
 
 @media (max-width: 620px) {
+  .ambient-two { right: 0; }
   html, body { width: 100%; max-width: 100%; min-width: 0; }
   body { margin: 0; overflow-x: hidden; }
   .site-header { width: 100%; height: 70px; padding: 0 18px; }

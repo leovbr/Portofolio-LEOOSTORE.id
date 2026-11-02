@@ -30,9 +30,13 @@ Expected URL:
 1. Create a Supabase project.
 2. Open SQL Editor and run `supabase/schema.sql`.
 3. Create the owner/admin account in Supabase Authentication.
-4. Review and tighten write policies so only the intended admin identity can manage content.
-5. Connect the public project list and admin dashboard using the Supabase publishable/anon key.
-6. Never put the Supabase service-role key in browser JavaScript.
+4. Copy that user's UUID from **Authentication → Users**, then run this in SQL Editor (replace the UUID):
+
+   `insert into public.portfolio_admins (user_id) values ('YOUR-AUTH-USER-UUID');`
+
+5. Only UUIDs explicitly added to `portfolio_admins` can manage projects, testimonials, or upload thumbnails. Do not add public users to this table.
+6. Connect the public project list and admin dashboard using the Supabase publishable/anon key.
+7. Never put the Supabase service-role key in browser JavaScript.
 
 The current homepage uses sample project data in `assets/js/app.js`. It is not yet reading from Supabase. The admin page is intentionally a setup screen until authentication and database permissions are implemented and tested.
 

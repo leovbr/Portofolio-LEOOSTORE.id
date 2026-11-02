@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090b12">
+  <title>Admin Setup — LEOOSTORE.id</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .admin-page{min-height:100vh;display:grid;place-items:center;padding:30px 18px}.admin-card{width:min(560px,100%);padding:38px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#171a29,#0e1119);box-shadow:0 25px 80px #0007}.admin-card h1{font:600 34px var(--display);letter-spacing:-1.5px;margin:20px 0 10px}.admin-card p{font-size:13px;color:#a2a8b8;line-height:1.8}.setup-list{padding:0;list-style:none;margin:25px 0}.setup-list li{padding:12px 0;border-bottom:1px solid var(--line);font-size:12px;color:#d5d7e1;display:flex;gap:12px}.setup-list b{color:#a995f4}.admin-back{font-size:11px;color:#c4b6ff}.admin-warning{border:1px solid #74603a;background:#3a2d182e;border-radius:8px;padding:14px;color:#d7c18d;font-size:11px;line-height:1.7}.admin-mark{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,#a78bfa,#5b4acb);display:grid;place-items:center;font:700 23px var(--display)}
+  </style>
+</head>
+<body>
+  <main class="admin-page"><section class="admin-card">
+    <div class="admin-mark">L</div><div class="eyebrow" style="margin-top:24px">LEOOSTORE.ID / CONTROL CENTER</div>
+    <h1>Admin dashboard<span class="gradient-text">.</span></h1>
+    <p>Area pengelolaan portfolio. Kita sedang menyiapkan autentikasi dan koneksi database agar hanya admin yang berwenang dapat menambah, mengubah, atau menghapus project.</p>
+    <div class="admin-warning"><strong>Setup belum selesai.</strong> Halaman ini belum menerima login atau menyimpan data. Jangan masukkan password atau data rahasia di sini sebelum Supabase Auth dan Row Level Security selesai dikonfigurasi.</div>
+    <ul class="setup-list"><li><b>01</b> Buat project Supabase dan jalankan schema database.</li><li><b>02</b> Aktifkan Supabase Auth untuk akun admin.</li><li><b>03</b> Konfigurasikan Storage bucket untuk thumbnail project.</li><li><b>04</b> Hubungkan dashboard ke database dengan policy RLS.</li></ul>
+    <a class="admin-back" href="index.html">← Back to public portfolio</a>
+  </section></main>
+</body>
+</html>

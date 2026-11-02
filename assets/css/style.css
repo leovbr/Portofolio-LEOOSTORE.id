@@ -107,3 +107,17 @@
 .project-gallery.swipe.ratio-16-9 img{height:100%;flex-basis:100%}
 .project-gallery.swipe.ratio-9-16 img{height:100%;flex-basis:100%}
 .project-gallery.swipe.ratio-1-1 img{height:100%;flex-basis:100%}
+
+
+/* Full project descriptions */
+.project-description-preview p{margin:0 0 9px;white-space:pre-line;overflow-wrap:anywhere}
+.description-more{border:0;background:transparent;padding:0;color:#a99af5;font-size:11px;font-weight:700;cursor:pointer}
+.description-more:hover{color:#76e4ed}
+.description-modal[hidden]{display:none!important}
+.description-modal{position:fixed;inset:0;z-index:999;display:grid;place-items:center;padding:20px;background:rgba(3,5,12,.82);backdrop-filter:blur(12px)}
+.description-modal-panel{width:min(720px,100%);max-height:min(82vh,780px);display:flex;flex-direction:column;border:1px solid #51496f;border-radius:14px;background:linear-gradient(145deg,#171a29,#0d111b);box-shadow:0 25px 90px #000b;overflow:hidden}
+.description-modal-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;border-bottom:1px solid var(--line)}
+.description-modal-head h2{font:600 20px var(--display);margin:0}
+.description-modal-head button{border:0;background:transparent;color:#c9c3e4;font-size:29px;line-height:1;cursor:pointer}
+.description-modal-body{padding:22px;overflow:auto;color:#c2c6d3;font-size:13px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere}
+body.modal-open{overflow:hidden}

@@ -1,0 +1,106 @@
+/* LEOOSTORE.id — smooth write, fast electric flicker, clean white shine, glitch reset. */
+.brand-wordmark{
+  position:relative!important;
+  display:inline-block!important;
+  color:#7c5cff!important;
+  background-image:linear-gradient(90deg,#fff 0%,#fff 34%,#7c5cff 34%,#7c5cff 100%)!important;
+  background-size:100% 100%!important;
+  background-position:0 50%!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  clip-path:inset(0 0 0 0);
+  -webkit-mask-image:linear-gradient(to right,#000 0%,#000 100%);
+  mask-image:linear-gradient(to right,#000 0%,#000 100%);
+  -webkit-mask-size:100% 100%;
+  mask-size:100% 100%;
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  will-change:clip-path,filter,transform;
+  isolation:isolate;
+  animation:leoSmoothWrite 8s linear infinite,leoLightningGlitch 8s steps(1,end) infinite!important;
+}
+.brand-wordmark::before{
+  content:"";
+  position:absolute;
+  inset:-9px -8px;
+  pointer-events:none;
+  z-index:3;
+  opacity:0;
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 64'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 24 L16 17 L12 29 L27 22 L21 37 L35 31' stroke='%23d8b4fe' stroke-width='2.8'/%3E%3Cpath d='M42 8 L51 17 L47 24 L58 29' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M82 56 L94 43 L89 34 L105 25' stroke='%23a970ff' stroke-width='2.8'/%3E%3Cpath d='M139 8 L132 19 L143 25 L135 37' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M177 54 L188 41 L183 32 L198 23' stroke='%23c4a1ff' stroke-width='2.8'/%3E%3Cpath d='M213 14 L205 22 L211 29 L203 39' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M226 47 L235 39 L230 32' stroke='%23a970ff' stroke-width='2.4'/%3E%3C/g%3E%3C/svg%3E");
+  filter:drop-shadow(0 0 4px rgba(183,138,255,1)) drop-shadow(0 0 9px rgba(124,58,237,.95));
+  animation:leoWriteLightning 8s linear infinite;
+}
+.brand-wordmark::after{
+  content:"LEOOSTORE.id";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:4;
+  color:transparent;
+  background:linear-gradient(105deg,transparent 0%,transparent 34%,rgba(255,255,255,.15) 41%,#fff 48%,rgba(255,255,255,.98) 51%,rgba(255,255,255,.38) 57%,transparent 66%,transparent 100%);
+  background-size:260% 100%;
+  background-position:160% 0;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  opacity:0;
+  filter:drop-shadow(0 0 3px rgba(255,255,255,.95));
+  animation:leoWhiteShimmer 8s cubic-bezier(.22,1,.36,1) infinite;
+  display:block!important;
+}
+/* Logo writes on from the left while the lightning flickers rapidly from frame one. */
+@keyframes leoSmoothWrite{
+  0%{clip-path:inset(0 100% 0 0);-webkit-mask-size:0% 100%;mask-size:0% 100%;filter:none}
+  45%{clip-path:inset(0 0 0 0);-webkit-mask-size:100% 100%;mask-size:100% 100%;filter:drop-shadow(0 0 3px rgba(169,112,255,.4))}
+  76%{clip-path:inset(0 0 0 0);-webkit-mask-size:100% 100%;mask-size:100% 100%;filter:drop-shadow(0 0 3px rgba(169,112,255,.4))}
+  100%{clip-path:inset(0 100% 0 0);-webkit-mask-size:0% 100%;mask-size:0% 100%;filter:none}
+}
+@keyframes leoWriteLightning{
+  0%{opacity:1;transform:translateX(-2px) scale(.98);filter:drop-shadow(0 0 5px #fff) drop-shadow(0 0 12px #7c3aed)}
+  3%{opacity:.12;transform:translateX(1px) scale(1.015)}
+  6%{opacity:1;transform:translateX(-1px) scale(1);filter:drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px #7c3aed)}
+  9%{opacity:.18;transform:translateX(1px) scale(1.01)}
+  12%{opacity:1;transform:translateX(0) scale(1)}
+  16%{opacity:.25}
+  20%{opacity:1;filter:drop-shadow(0 0 7px #fff) drop-shadow(0 0 16px #7c3aed)}
+  26%{opacity:.15}
+  31%{opacity:1}
+  37%{opacity:.4}
+  42%{opacity:1;filter:drop-shadow(0 0 7px #fff) drop-shadow(0 0 14px #7c3aed)}
+  45%{opacity:1;transform:translateX(0) scale(1)}
+  46%,76%{opacity:0;transform:translateX(0) scale(.98)}
+  78%{opacity:1;transform:translateX(-1px) scale(1);filter:drop-shadow(0 0 5px rgba(216,180,254,1)) drop-shadow(0 0 12px rgba(124,58,237,1))}
+  79%{opacity:.2;transform:translateX(1px) scale(1.015)}
+  80%{opacity:1;transform:translateX(0) scale(1.01)}
+  82%{opacity:.95;transform:translateX(1px) scale(1)}
+  83%{opacity:0}
+  85%{opacity:1;transform:translateX(-1px) scale(1.015)}
+  87%,100%{opacity:0}
+}
+/* Smooth white highlight sweeps across the finished wordmark; no dark overlay or collapse. */
+@keyframes leoWhiteShimmer{
+  0%,44%{background-position:160% 0;opacity:0}
+  48%{opacity:.2}
+  52%{opacity:.95}
+  68%{background-position:-70% 0;opacity:1}
+  76%,100%{background-position:-70% 0;opacity:0}
+}
+/* Brief electric glitch before a normal clean reset into the next writing cycle. */
+@keyframes leoLightningGlitch{
+  0%,76%,100%{transform:translate(0,0);filter:none;text-shadow:none}
+  78%{transform:translate(-1px,0);filter:drop-shadow(2px 0 #fff) drop-shadow(-2px 0 #a970ff);text-shadow:2px 0 rgba(255,255,255,.9),-2px 0 rgba(124,92,255,.95)}
+  79%{transform:translate(1px,-1px) skewX(-5deg);filter:drop-shadow(-3px 0 #fff) drop-shadow(3px 0 #7c5cff);text-shadow:-3px 0 #fff,3px 0 #7c5cff}
+  80%{transform:translate(-1px,1px) skewX(4deg);filter:drop-shadow(0 0 7px rgba(255,255,255,.95));text-shadow:2px 0 #fff,-2px 0 #7c5cff}
+  81%{transform:translate(1px,0);filter:drop-shadow(0 0 10px rgba(124,92,255,.9));text-shadow:-2px 0 #fff,2px 0 #7c5cff}
+  82%,84%{transform:translate(0,0);filter:drop-shadow(0 0 4px rgba(255,255,255,.85));text-shadow:none}
+  85%{transform:translate(-1px,0);filter:drop-shadow(1px 0 #fff) drop-shadow(-1px 0 #7c5cff)}
+  87%{transform:translate(0,0);filter:none;text-shadow:none}
+}
+
+
+
+.brand-wordmark{font-family:'Orbitron','Plus Jakarta Sans',sans-serif!important;font-weight:900!important;letter-spacing:-.045em!important;font-size:clamp(15px,2vw,19px)!important;line-height:1.15!important;white-space:nowrap!important;}
+@media(max-width:620px){.brand-wordmark{font-size:clamp(14px,4vw,17px)!important;}}

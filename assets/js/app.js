@@ -54,31 +54,3 @@ mainNav?.querySelectorAll("a").forEach(link => link.addEventListener("click", ()
 const year = document.querySelector("#year");
 if (year) year.textContent = new Date().getFullYear();
 renderProjects();
-
-
-/* TEMP MOBILE WIDTH DIAGNOSTIC */
-(() => {
-  const panel = document.createElement("pre");
-  panel.id = "width-diagnostic";
-  panel.style.cssText = "position:fixed;left:6px;bottom:6px;z-index:99999;margin:0;padding:8px 10px;max-width:calc(100vw - 12px);background:#111e;color:#9ff;font:10px/1.45 monospace;border:1px solid #7de;border-radius:6px;white-space:pre-wrap;pointer-events:none";
-  document.body.appendChild(panel);
-  const measure = () => {
-    const get = selector => {
-      const el = document.querySelector(selector);
-      if (!el) return "n/a";
-      const r = el.getBoundingClientRect();
-      return Math.round(r.width) + "px @ " + Math.round(r.left);
-    };
-    panel.textContent = [
-      "viewport: " + window.innerWidth + " | doc: " + document.documentElement.clientWidth,
-      "body: " + document.body.clientWidth + " | scroll: " + document.documentElement.scrollWidth,
-      "header: " + get(".site-header"),
-      "main: " + get("main"),
-      "hero: " + get(".hero"),
-      "strip: " + get(".intro-strip")
-    ].join("\\n");
-  };
-  measure();
-  window.addEventListener("resize", measure);
-  setTimeout(measure, 500);
-})();

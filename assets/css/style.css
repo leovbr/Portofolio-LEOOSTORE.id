@@ -160,3 +160,11 @@ body.modal-open{overflow:hidden}
 .home-testimonial-foot{display:flex;justify-content:flex-end;margin-top:24px}
 @media(max-width:800px){.home-testimonial-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.home-testimonial-grid{grid-template-columns:minmax(0,1fr)}.home-testimonial-grid .testimonial-page-card{padding:22px}}
+
+
+/* Swipeable testimonial media gallery: show complete photos and videos */
+.testimonial-media-track{display:flex;gap:10px;width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;margin:14px 0 18px;padding:0 0 9px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#8e7bdd #171a29;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y}
+.testimonial-media-slide{flex:0 0 100%;width:100%;min-width:0;min-height:120px;display:flex;align-items:center;justify-content:center;overflow:hidden;scroll-snap-align:start;border-radius:9px;background:#080b13;border:1px solid var(--line)}
+.testimonial-media-slide img{display:block;width:100%;height:auto;max-height:360px;object-fit:contain;}
+.testimonial-media-slide video{display:block;width:100%;height:auto;max-height:360px;object-fit:contain;background:#05070d}
+.testimonial-media-slide video:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}

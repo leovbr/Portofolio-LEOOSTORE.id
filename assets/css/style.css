@@ -208,3 +208,16 @@ body.modal-open{overflow:hidden}
 /* Strong visible LEOOSTORE frame specifically around testimonial photos */
 .testimonial-media-slide.testimonial-photo-slide{padding:7px!important;border:2px solid #8e7bdd!important;border-radius:16px!important;background:linear-gradient(135deg,#28203e 0%,#111523 55%,#28203e 100%)!important;box-shadow:0 0 0 1px #c4a7ff55,0 8px 24px #0007,inset 0 0 0 1px #ffffff0a!important;overflow:hidden!important}
 .testimonial-media-slide.testimonial-photo-slide>img{display:block!important;width:100%!important;height:auto!important;max-height:360px!important;object-fit:contain!important;border:1px solid #a78bfa55!important;border-radius:10px!important;background:#080b13!important}
+
+
+/* Compact project previews while preserving the admin-selected aspect ratio */
+.project-art.ratio-16-9,.project-gallery.swipe.ratio-16-9{width:min(100%,420px)!important;max-width:420px!important;aspect-ratio:16/9!important;height:auto!important;margin-inline:auto!important}
+.project-art.ratio-9-16,.project-gallery.swipe.ratio-9-16{width:min(100%,146px)!important;max-width:146px!important;aspect-ratio:9/16!important;height:auto!important;margin-inline:auto!important}
+.project-art.ratio-1-1,.project-gallery.swipe.ratio-1-1{width:min(100%,260px)!important;max-width:260px!important;aspect-ratio:1/1!important;height:auto!important;margin-inline:auto!important}
+.project-art.ratio-16-9 img,.project-art.ratio-9-16 img,.project-art.ratio-1-1 img,.project-gallery.swipe.ratio-16-9 img,.project-gallery.swipe.ratio-9-16 img,.project-gallery.swipe.ratio-1-1 img{width:100%!important;height:100%!important;object-fit:contain!important;background:#080b13!important}
+.project-gallery.swipe.ratio-16-9,.project-gallery.swipe.ratio-9-16,.project-gallery.swipe.ratio-1-1{display:flex!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory!important}
+.project-gallery.swipe.ratio-16-9 img,.project-gallery.swipe.ratio-9-16 img,.project-gallery.swipe.ratio-1-1 img{flex:0 0 100%!important;min-width:100%!important;max-width:100%!important}
+.project-links{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.project-links .buy-website-link{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border-radius:9px;border:1px solid #8e7bdd;background:linear-gradient(135deg,#a78bfa,#8068cb);color:#100d1b!important;font-size:11px;font-weight:800;box-shadow:0 5px 16px #8e7bdd22}
+.project-links .buy-website-link:hover{filter:brightness(1.08);transform:translateY(-1px)}
+@media(max-width:620px){.project-art.ratio-16-9,.project-gallery.swipe.ratio-16-9{width:min(100%,420px)!important}.project-art.ratio-9-16,.project-gallery.swipe.ratio-9-16{width:min(100%,146px)!important}.project-art.ratio-1-1,.project-gallery.swipe.ratio-1-1{width:min(100%,260px)!important}}

@@ -51,9 +51,28 @@ if((testimonialPublicList||homeTestimonialsGrid)&&window.supabase){
   const empty='<div class="testimonial-page-card"><span class="quote-mark">“</span><p>Testimonials from real project collaborations will appear here.</p><small>We only publish feedback with client permission.</small></div>';
   if(error){console.warn("Could not load public testimonials:",error);if(testimonialPublicList)testimonialPublicList.innerHTML=empty;if(homeTestimonialsGrid)homeTestimonialsGrid.innerHTML=empty;return}
   if(!data?.length){if(testimonialPublicList)testimonialPublicList.innerHTML=empty;if(homeTestimonialsGrid)homeTestimonialsGrid.innerHTML=empty;return}
-  const card=t=>{const media=[...(t.image_paths||[]).map(path=>({type:"image",url:publicDb.storage.from("portfolio-projects").getPublicUrl(path).data.publicUrl})),...(t.video_paths||[]).map(path=>({type:"video",url:publicDb.storage.from("portfolio-projects").getPublicUrl(path).data.publicUrl}))];const gallery=media.length?'<div class="testimonial-media-track" aria-label="Galeri media testimoni">'+media.map((m,i)=>m.type==="image"?'<div class="testimonial-media-slide"><img src="'+m.url+'" alt="Foto testimoni '+(i+1)+'" loading="lazy"></div>':'<div class="testimonial-media-slide"><video src="'+m.url+'" controls playsinline preload="metadata"></video></div>').join("")+'</div>':'';return '<article class="testimonial-page-card"><span class="quote-mark">“</span>'+gallery+'<div class="testimonial-stars">'+("★".repeat(Math.max(1,Math.min(5,Number(t.rating)||5))))+'</div><p>'+safeText(t.content)+'</p><small>'+safeText(t.client_name)+(t.client_role?" · "+safeText(t.client_role):"")+(t.company?" · "+safeText(t.company):"")+'</small></article>'};
+  const card=t=>{const media=[...(t.image_paths||[]).map(path=>({type:"image",url:publicDb.storage.from("portfolio-projects").getPublicUrl(path).data.publicUrl})),...(t.video_paths||[]).map(path=>({type:"video",url:publicDb.storage.from("portfolio-projects").getPublicUrl(path).data.publicUrl}))];const gallery=media.length?'<div class="testimonial-media-track" aria-label="Galeri media testimoni">'+media.map((m,i)=>m.type==="image"?'<div class="testimonial-media-slide"><img src="'+m.url+'" alt="Foto testimoni '+(i+1)+'" loading="lazy"></div>':'<div class="testimonial-media-slide"><div class="brand-video-player"><video src="'+m.url+'" playsinline preload="metadata"></video><div class="brand-video-overlay"><button type="button" class="brand-video-bigplay" aria-label="Putar video">▶</button></div><div class="brand-video-controls"><button type="button" class="brand-video-toggle" aria-label="Putar video">▶</button><span class="brand-video-time">0:00 / 0:00</span><input class="brand-video-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Posisi video"><button type="button" class="brand-video-mute" aria-label="Matikan suara">♫</button><button type="button" class="brand-video-full" aria-label="Layar penuh">⛶</button></div></div></div>').join("")+'</div>':'';return '<article class="testimonial-page-card"><span class="quote-mark">“</span>'+gallery+'<div class="testimonial-stars">'+("★".repeat(Math.max(1,Math.min(5,Number(t.rating)||5))))+'</div><p>'+safeText(t.content)+'</p><small>'+safeText(t.client_name)+(t.client_role?" · "+safeText(t.client_role):"")+(t.company?" · "+safeText(t.company):"")+'</small></article>'};
   if(testimonialPublicList)testimonialPublicList.innerHTML=data.map(card).join("");
   if(homeTestimonialsGrid)homeTestimonialsGrid.innerHTML=data.slice(0,3).map(card).join("");
+  initBrandedVideoPlayers(testimonialPublicList);
+  initBrandedVideoPlayers(homeTestimonialsGrid);
+ });
+}
+
+function initBrandedVideoPlayers(root){
+ if(!root)return;
+ root.querySelectorAll(".brand-video-player").forEach(player=>{
+  if(player.dataset.ready)return;player.dataset.ready="1";
+  const video=player.querySelector("video"),play=player.querySelector(".brand-video-toggle"),big=player.querySelector(".brand-video-bigplay"),time=player.querySelector(".brand-video-time"),seek=player.querySelector(".brand-video-seek"),mute=player.querySelector(".brand-video-mute"),full=player.querySelector(".brand-video-full");
+  const fmt=n=>{if(!Number.isFinite(n))return "0:00";const m=Math.floor(n/60),s=Math.floor(n%60);return m+":"+String(s).padStart(2,"0")};
+  const update=()=>{const d=video.duration||0;time.textContent=fmt(video.currentTime)+" / "+fmt(d);seek.value=d?String(Math.round(video.currentTime/d*1000)):"0";play.textContent=video.paused?"▶":"Ⅱ";play.setAttribute("aria-label",video.paused?"Putar video":"Jeda video");big.hidden=!video.paused;player.classList.toggle("is-playing",!video.paused);};
+  const toggle=()=>{if(video.paused)video.play().catch(()=>{});else video.pause()};
+  play.addEventListener("click",toggle);big.addEventListener("click",toggle);
+  video.addEventListener("click",toggle);video.addEventListener("play",update);video.addEventListener("pause",update);video.addEventListener("timeupdate",update);video.addEventListener("loadedmetadata",update);video.addEventListener("ended",update);
+  seek.addEventListener("input",()=>{if(video.duration)video.currentTime=video.duration*(Number(seek.value)/1000)});
+  mute.addEventListener("click",()=>{video.muted=!video.muted;mute.textContent=video.muted?"×♫":"♫";mute.setAttribute("aria-label",video.muted?"Nyalakan suara":"Matikan suara")});
+  full.addEventListener("click",()=>{if(player.requestFullscreen)player.requestFullscreen().catch(()=>{});else if(video.webkitEnterFullscreen)video.webkitEnterFullscreen()});
+  update();
  });
 }
 const year=document.querySelector("#year");if(year)year.textContent=new Date().getFullYear();renderFilters();renderProjects();loadPublicProjects();

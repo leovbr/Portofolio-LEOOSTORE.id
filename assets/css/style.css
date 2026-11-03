@@ -138,3 +138,10 @@ body.modal-open{overflow:hidden}
 .project-info>.project-price strong{color:#d8d0ff;font-size:12px;text-align:right}
 .project-info>h3{margin:0 0 9px}
 .project-description-preview p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:0;margin:0 0 10px;line-height:1.75}
+
+/* All project galleries with multiple photos use horizontal swipe */
+.project-gallery.swipe{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory!important;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;cursor:grab}
+.project-gallery.swipe:active{cursor:grabbing}
+.project-gallery.swipe img{flex:0 0 100%!important;min-width:100%!important;max-width:100%!important;scroll-snap-align:start;user-select:none;-webkit-user-drag:none}
+.project-gallery.swipe::-webkit-scrollbar{height:4px}
+.project-gallery.swipe::-webkit-scrollbar-thumb{background:#8e7bdd;border-radius:8px}

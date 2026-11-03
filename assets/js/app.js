@@ -1,6 +1,6 @@
 const SUPABASE_URL="https://bxsvpwgaeeocpefaukkq.supabase.co";
 const SUPABASE_KEY="sb_publishable_7pAX9I2gbAGPNoHcboD-8w_v5vZbsKx";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const db=window.supabase?.createClient ? window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY) : null;
 const initialProjects=[
 {id:"leoostore",name:"LEOOSTORE.id",category:"ecommerce",categoryLabel:"E-commerce",description:"Platform toko digital untuk katalog produk game dan layanan top-up.",status:"In development",url:"",art:"LEO",images:[]},
 {id:"kyvora",name:"Kyvora.id",category:"web",categoryLabel:"Website",description:"Website katalog akun game dengan pengalaman visual bertema gaming.",status:"In development",url:"",art:"KYO",images:[]},
@@ -23,15 +23,17 @@ function renderProjects(category="all"){
  }).join("");
 }
 async function loadPublicProjects(){try{
+ if(!db)throw new Error("Supabase SDK gagal dimuat. Periksa koneksi CDN atau refresh halaman.");
  const [projectResult,categoryResult]=await Promise.all([
  db.from("portfolio_projects").select("id,name,category,category_label,description,status,url,image_path,image_paths,image_aspect_ratio,is_private,is_for_sale,price_min,price_max,show_price,sort_order").eq("is_published",true).order("sort_order").order("created_at",{ascending:false}),
  db.from("portfolio_categories").select("slug,label,sort_order").eq("is_active",true).order("sort_order").order("label")
  ]);
  if(projectResult.error)throw projectResult.error;
+ if(categoryResult.error)throw categoryResult.error;
  if(categoryResult.data?.length)categories=categoryResult.data;
- if(projectResult.data?.length){projects=projectResult.data.map(p=>{const paths=p.image_paths?.length?p.image_paths:(p.image_path?[p.image_path]:[]);return {...p,categoryLabel:p.category_label||categories.find(c=>c.slug===p.category)?.label||p.category,art:p.name.slice(0,3).toUpperCase(),images:paths.map(path=>db.storage.from("portfolio-projects").getPublicUrl(path).data.publicUrl)}})}
+ projects=(projectResult.data||[]).map(p=>{const paths=p.image_paths?.length?p.image_paths:(p.image_path?[p.image_path]:[]);return {...p,categoryLabel:p.category_label||categories.find(c=>c.slug===p.category)?.label||p.category,art:p.name.slice(0,3).toUpperCase(),images:paths.map(path=>db.storage.from("portfolio-projects").getPublicUrl(path).data.publicUrl)}});
  renderFilters("all");renderProjects("all");
- }catch(error){console.warn("Portfolio database unavailable; showing starter projects.",error);renderFilters("all");renderProjects("all")}}
+ }catch(error){console.error("Portfolio Supabase load failed:",error);if(grid)grid.innerHTML='<div class="empty-state" role="alert">Data portfolio belum berhasil dimuat. Periksa koneksi lalu <button type="button" id="retryPortfolioLoad" class="text-link">coba lagi</button>.</div>';document.querySelector("#retryPortfolioLoad")?.addEventListener("click",loadPublicProjects)}}
 filters?.addEventListener("click",event=>{const button=event.target.closest("[data-filter]");if(!button)return;filters.querySelectorAll(".filter-chip").forEach(chip=>chip.classList.toggle("active",chip===button));renderProjects(button.dataset.filter)});
 menuToggle?.addEventListener("click",()=>{const open=mainNav.classList.toggle("open");menuToggle.setAttribute("aria-expanded",String(open))});
 mainNav?.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>{mainNav.classList.remove("open");menuToggle?.setAttribute("aria-expanded","false")}));
@@ -103,4 +105,4 @@ function initBrandedVideoPlayers(root){
   update();
  });
 }
-const year=document.querySelector("#year");if(year)year.textContent=new Date().getFullYear();renderFilters();renderProjects();loadPublicProjects();
+const year=document.querySelector("#year");if(year)year.textContent=new Date().getFullYear();loadPublicProjects();

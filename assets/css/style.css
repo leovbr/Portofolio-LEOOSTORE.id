@@ -168,3 +168,19 @@ body.modal-open{overflow:hidden}
 .testimonial-media-slide img{display:block;width:100%;height:auto;max-height:360px;object-fit:contain;}
 .testimonial-media-slide video{display:block;width:100%;height:auto;max-height:360px;object-fit:contain;background:#05070d}
 .testimonial-media-slide video:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
+
+
+/* LEOOSTORE branded testimonial video player */
+.brand-video-player{position:relative;width:100%;background:radial-gradient(ellipse at 20% 0%,#292044,#080b13 72%);border:1px solid #65528f;border-radius:14px;overflow:hidden;isolation:isolate}
+.brand-video-player video{display:block;width:100%;height:auto;max-height:360px;aspect-ratio:16/9;object-fit:contain;background:#05070d;cursor:pointer}
+.brand-video-overlay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;background:linear-gradient(180deg,#080b1300 45%,#080b1366)}
+.brand-video-bigplay{pointer-events:auto;width:62px;height:62px;border:1px solid #d9ccff88;border-radius:50%;background:linear-gradient(135deg,#c2a8ff,#8e7bdd);color:#11101b;font-size:23px;padding-left:5px;box-shadow:0 8px 30px #0008;cursor:pointer}
+.brand-video-bigplay[hidden]{display:none}
+.brand-video-controls{display:grid;grid-template-columns:34px minmax(76px,auto) 1fr 32px 32px;align-items:center;gap:8px;padding:10px 12px 12px;background:linear-gradient(90deg,#171426,#101522);border-top:1px solid #a78bfa33}
+.brand-video-controls button{width:32px;height:32px;border:1px solid #554575;border-radius:9px;background:#242039;color:#e9e2ff;font-size:15px;cursor:pointer}
+.brand-video-controls .brand-video-time{font-size:11px;font-variant-numeric:tabular-nums;color:#c9c2dc;white-space:nowrap}
+.brand-video-seek{width:100%;min-width:0;accent-color:#ae91ff;cursor:pointer}
+.brand-video-controls button:active,.brand-video-bigplay:active{transform:scale(.96)}
+@media(max-width:420px){.brand-video-controls{grid-template-columns:30px minmax(70px,auto) 1fr 28px 28px;gap:5px;padding:8px}.brand-video-controls button{width:28px;height:28px}.brand-video-controls .brand-video-time{font-size:10px}}
+.brand-video-player:fullscreen{width:100vw;height:100vh;border:0;border-radius:0;display:flex;flex-direction:column;justify-content:center;background:#080b13}
+.brand-video-player:fullscreen video{max-height:calc(100vh - 70px);flex:1;min-height:0;object-fit:contain}

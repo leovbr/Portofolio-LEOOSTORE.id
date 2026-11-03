@@ -56,9 +56,29 @@ if((testimonialPublicList||homeTestimonialsGrid)&&window.supabase){
   if(homeTestimonialsGrid)homeTestimonialsGrid.innerHTML=data.slice(0,3).map(card).join("");
   initBrandedVideoPlayers(testimonialPublicList);
   initBrandedVideoPlayers(homeTestimonialsGrid);
+  initTestimonialAutoSlides(testimonialPublicList);
+  initTestimonialAutoSlides(homeTestimonialsGrid);
  });
 }
 
+function initTestimonialAutoSlides(root){
+ if(!root)return;
+ root.querySelectorAll(".testimonial-media-track").forEach(track=>{
+  if(track.dataset.autoReady)return;track.dataset.autoReady="1";
+  const slides=()=>Array.from(track.querySelectorAll(".testimonial-media-slide"));
+  let timer=null,pausedByUser=false;
+  const activeIndex=()=>{const list=slides();if(!list.length)return 0;const width=track.clientWidth+10;return Math.max(0,Math.min(list.length-1,Math.round(track.scrollLeft/width)))};
+  const stop=()=>{if(timer){clearInterval(timer);timer=null}};
+  const start=()=>{stop();if(slides().length<2)return;timer=setInterval(()=>{if(document.hidden||pausedByUser)return;const list=slides();if(list.some(slide=>{const v=slide.querySelector("video");return v&&!v.paused&&!v.ended}))return;const next=(activeIndex()+1)%list.length;track.scrollTo({left:next*(track.clientWidth+10),behavior:"smooth"})},5000)};
+  track.addEventListener("pointerdown",()=>{pausedByUser=true;stop()},{passive:true});
+  track.addEventListener("touchstart",()=>{pausedByUser=true;stop()},{passive:true});
+  track.addEventListener("pointerup",()=>{setTimeout(()=>{pausedByUser=false;start()},1200)},{passive:true});
+  track.addEventListener("touchend",()=>{setTimeout(()=>{pausedByUser=false;start()},1200)},{passive:true});
+  track.addEventListener("wheel",()=>{pausedByUser=true;stop();setTimeout(()=>{pausedByUser=false;start()},1800)},{passive:true});
+  track.querySelectorAll("video").forEach(video=>{video.addEventListener("play",stop);video.addEventListener("pause",start);video.addEventListener("ended",start)});
+  start();
+ });
+}
 function initBrandedVideoPlayers(root){
  if(!root)return;
  root.querySelectorAll(".brand-video-player").forEach(player=>{

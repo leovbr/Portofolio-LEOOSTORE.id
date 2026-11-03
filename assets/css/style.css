@@ -240,3 +240,5 @@ body.modal-open{overflow:hidden}
 
 /* Clean project screenshots: remove decorative mockup overlays above real images */
 .project-art:has(>img)::before,.project-art:has(>img)::after{display:none!important;content:none!important}
+
+.project-links .admin-project-link{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border-radius:9px;border:1px solid #4f9ba5;background:linear-gradient(135deg,#183640,#172b38);color:#b9f3f3!important;font-size:11px;font-weight:800}.project-links .admin-project-link:hover{filter:brightness(1.15);transform:translateY(-1px)}

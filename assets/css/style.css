@@ -237,3 +237,6 @@ body.modal-open{overflow:hidden}
 .project-links{justify-content:space-between!important;width:100%}
 .project-links .buy-website-link{margin-left:auto}
 @media(max-width:560px){.project-preview-modal{padding:10px}.project-preview-panel{max-height:94dvh}.project-preview-track{max-height:calc(94dvh - 110px)}.project-preview-slide{padding:8px}.project-preview-slide img{max-height:calc(94dvh - 155px)}.project-preview-hint{font-size:10px}}
+
+/* Clean project screenshots: remove decorative mockup overlays above real images */
+.project-art:has(>img)::before,.project-art:has(>img)::after{display:none!important;content:none!important}

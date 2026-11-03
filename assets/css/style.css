@@ -196,3 +196,10 @@ body.modal-open{overflow:hidden}
 .brand-video-player .brand-video-controls button:active{transform:scale(.94)!important}
 .brand-video-player video{display:block!important;width:100%!important;max-width:100%!important;height:auto!important;max-height:360px!important;aspect-ratio:16/9!important;object-fit:contain!important;background:#05070d!important}
 @media(max-width:420px){.brand-video-player .brand-video-controls{gap:5px!important;padding:8px!important;min-height:48px!important}.brand-video-player .brand-video-controls button{flex-basis:30px!important;width:30px!important;min-width:30px!important;height:30px!important;min-height:30px!important;font-size:14px!important}.brand-video-player .brand-video-controls .brand-video-time{min-width:65px!important;font-size:10px!important}}
+
+
+/* Unified LEOOSTORE frame for every testimonial photo and video slide */
+.testimonial-media-slide{padding:4px!important;border:1px solid #65528f!important;border-radius:14px!important;background:linear-gradient(145deg,#171426,#080b13)!important;box-sizing:border-box!important;min-height:140px!important}
+.testimonial-media-slide>img{width:100%!important;max-height:360px!important;object-fit:contain!important;border-radius:10px!important;background:#05070d!important}
+.testimonial-media-slide>.brand-video-player{width:100%!important;border:1px solid #65528f!important;border-radius:10px!important}
+.testimonial-media-track{scroll-behavior:smooth;scroll-padding-inline:0}

@@ -70,7 +70,7 @@ function initBrandedVideoPlayers(root){
   play.addEventListener("click",toggle);big.addEventListener("click",toggle);
   video.addEventListener("click",toggle);video.addEventListener("play",update);video.addEventListener("pause",update);video.addEventListener("timeupdate",update);video.addEventListener("loadedmetadata",update);video.addEventListener("ended",update);
   seek.addEventListener("input",()=>{if(video.duration)video.currentTime=video.duration*(Number(seek.value)/1000)});
-  mute.addEventListener("click",()=>{video.muted=!video.muted;mute.textContent=video.muted?"×♫":"♫";mute.setAttribute("aria-label",video.muted?"Nyalakan suara":"Matikan suara")});
+  video.muted=false;video.defaultMuted=false;video.volume=1;const syncSound=()=>{mute.textContent=video.muted?"×♫":"♫";mute.setAttribute("aria-label",video.muted?"Nyalakan suara":"Matikan suara");mute.title=video.muted?"Suara mati":"Suara aktif"};mute.addEventListener("click",()=>{video.muted=!video.muted;syncSound()});syncSound();
   full.addEventListener("click",()=>{if(player.requestFullscreen)player.requestFullscreen().catch(()=>{});else if(video.webkitEnterFullscreen)video.webkitEnterFullscreen()});
   update();
  });

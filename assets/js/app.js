@@ -101,7 +101,12 @@ function initBrandedVideoPlayers(root){
   video.addEventListener("click",toggle);video.addEventListener("play",update);video.addEventListener("pause",update);video.addEventListener("timeupdate",update);video.addEventListener("loadedmetadata",update);video.addEventListener("ended",update);
   seek.addEventListener("input",()=>{if(video.duration)video.currentTime=video.duration*(Number(seek.value)/1000)});
   video.muted=false;video.defaultMuted=false;video.volume=1;const syncSound=()=>{mute.textContent=video.muted?"×♫":"♫";mute.setAttribute("aria-label",video.muted?"Nyalakan suara":"Matikan suara");mute.title=video.muted?"Suara mati":"Suara aktif"};mute.addEventListener("click",()=>{video.muted=!video.muted;syncSound()});syncSound();
-  full.addEventListener("click",()=>{if(player.requestFullscreen)player.requestFullscreen().catch(()=>{});else if(video.webkitEnterFullscreen)video.webkitEnterFullscreen()});
+  const isPlayerFullscreen=()=>document.fullscreenElement===player||document.webkitFullscreenElement===player;
+  const syncFullscreenButton=()=>{const active=isPlayerFullscreen();full.textContent=active?"⛶":"⛶";full.setAttribute("aria-label",active?"Keluar dari layar penuh":"Layar penuh");full.title=active?"Keluar dari layar penuh":"Layar penuh"};
+  full.addEventListener("click",async()=>{try{if(isPlayerFullscreen()){if(document.exitFullscreen)await document.exitFullscreen();else if(document.webkitExitFullscreen)document.webkitExitFullscreen();return}if(player.requestFullscreen){await player.requestFullscreen()}else if(video.webkitEnterFullscreen){video.webkitEnterFullscreen()}}catch(error){console.warn("Fullscreen tidak tersedia di browser ini:",error)}});
+  document.addEventListener("fullscreenchange",syncFullscreenButton);
+  document.addEventListener("webkitfullscreenchange",syncFullscreenButton);
+  syncFullscreenButton();
   update();
  });
 }

@@ -106,3 +106,22 @@ function initBrandedVideoPlayers(root){
  });
 }
 const year=document.querySelector("#year");if(year)year.textContent=new Date().getFullYear();loadPublicProjects();
+/* Tap testimonial photos to view the original ratio at viewport size */
+(function initTestimonialMediaLightbox(){
+ const roots=[document.querySelector("#testimonialPublicList"),document.querySelector("#homeTestimonialsGrid")].filter(Boolean);
+ if(!roots.length)return;
+ const modal=document.createElement("div");
+ modal.className="media-lightbox";modal.hidden=true;modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-label","Preview media");
+ modal.innerHTML='<div class="media-lightbox-inner"><button type="button" class="media-lightbox-close" aria-label="Tutup preview">×</button><div class="media-lightbox-content"></div></div>';
+ document.body.appendChild(modal);
+ const content=modal.querySelector(".media-lightbox-content");
+ const close=()=>{modal.hidden=true;content.replaceChildren();document.body.classList.remove("modal-open")};
+ modal.querySelector(".media-lightbox-close").addEventListener("click",close);
+ modal.addEventListener("click",e=>{if(e.target===modal)close()});
+ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!modal.hidden)close()});
+ roots.forEach(root=>root.addEventListener("click",e=>{
+  const img=e.target.closest(".testimonial-photo-slide img");if(!img)return;
+  const full=document.createElement("img");full.src=img.currentSrc||img.src;full.alt=img.alt||"Foto testimoni";
+  content.replaceChildren(full);modal.hidden=false;document.body.classList.add("modal-open");
+ }));
+})();

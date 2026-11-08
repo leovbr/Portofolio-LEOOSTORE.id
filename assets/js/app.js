@@ -149,11 +149,12 @@ const year=document.querySelector("#year");if(year)year.textContent=new Date().g
  },{threshold:.18});
  revealTargets.forEach(target=>observer.observe(target));
  const count=document.querySelector("#heroClientCount");
- let countAnimated=false,countRunning=false;
+ let countAnimated=false,countRunning=false,countObserver=null;
  function animateClientCount(){
   if(!count||countAnimated||countRunning)return;
   const target=Number(String(count.textContent).replace(/[^0-9]/g,""))||0;
   countAnimated=true;countRunning=true;
+  if(countObserver){countObserver.disconnect();countObserver=null}
   if(target<=0){count.textContent="0+";countRunning=false;return}
   const duration=1100,start=performance.now();
   function frame(now){
@@ -164,7 +165,10 @@ const year=document.querySelector("#year");if(year)year.textContent=new Date().g
   count.textContent="0+";requestAnimationFrame(frame);
  }
  if(count){
-  const countObserver=new MutationObserver(()=>{if(!countRunning&&count.closest(".hero-client-proof")?.classList.contains("is-visible")){countAnimated=false;animateClientCount()}});
+  countObserver=new MutationObserver(()=>{
+   if(!countRunning&&!countAnimated&&!count.closest(".hero-client-proof")?.classList.contains("is-visible"))return;
+   if(!countRunning&&!countAnimated&&count.closest(".hero-client-proof")?.classList.contains("is-visible"))animateClientCount();
+  });
   countObserver.observe(count,{childList:true,characterData:true,subtree:true});
  }
 })();

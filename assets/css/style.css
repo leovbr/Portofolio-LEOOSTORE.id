@@ -398,3 +398,17 @@ body.modal-open{overflow:hidden}
  .hero-proof-benefits li,.hero-proof-benefits li:before,.motion-enabled .hero-proof-card,.motion-enabled .hero-proof-benefits,.motion-enabled .hero-note,.motion-enabled .hero-visual,.motion-enabled .hero-visual *{animation:none!important;transition:none!important;opacity:1!important;transform:none!important;translate:none!important}
  .project-art img,.project-gallery img,.testimonial-photo-slide img{transition:none!important}
 }
+
+
+/* Visible photo touch feedback — project and testimonial galleries */
+.project-art img,.project-gallery img,.testimonial-photo-slide img{will-change:transform,filter}
+.project-art img.photo-tap-feedback,.project-gallery img.photo-tap-feedback,.testimonial-photo-slide img.photo-tap-feedback{animation:photoTapFeedback .56s cubic-bezier(.2,.75,.25,1) both}
+@keyframes photoTapFeedback{
+ 0%{transform:scale(1);filter:brightness(1)}
+ 35%{transform:scale(.955);filter:brightness(.62) saturate(.82)}
+ 68%{transform:scale(.975);filter:brightness(.78)}
+ 100%{transform:scale(1);filter:brightness(1)}
+}
+@media(prefers-reduced-motion:reduce){
+ .project-art img.photo-tap-feedback,.project-gallery img.photo-tap-feedback,.testimonial-photo-slide img.photo-tap-feedback{animation:none!important}
+}

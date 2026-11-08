@@ -10,17 +10,33 @@ const grid=document.querySelector("#projectGrid"),filters=document.querySelector
 let projects=initialProjects,categories=[{slug:"ecommerce",label:"E-commerce"},{slug:"business",label:"Business tools"},{slug:"web",label:"Web design"}];
 function safeText(value=""){return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]))}
 function renderFilters(active="all"){if(!filters)return;filters.innerHTML='<button class="filter-chip '+(active==="all"?"active":"")+'" data-filter="all">All projects</button>'+categories.map(c=>'<button class="filter-chip '+(active===c.slug?"active":"")+'" data-filter="'+safeText(c.slug)+'">'+safeText(c.label)+'</button>').join("")}
+let projectCardSlideTimers=[];
+function initProjectCardAutoSlides(){
+ projectCardSlideTimers.forEach(timer=>clearInterval(timer));projectCardSlideTimers=[];
+ if(!grid)return;
+ grid.querySelectorAll(".project-gallery.swipe").forEach(track=>{
+  const slides=track.querySelectorAll("img");if(slides.length<2)return;
+  const timer=setInterval(()=>{
+   if(document.hidden||!track.isConnected||!track.clientWidth)return;
+   const current=Math.max(0,Math.min(slides.length-1,Math.round(track.scrollLeft/track.clientWidth)));
+   const next=(current+1)%slides.length;
+   track.scrollTo({left:next*track.clientWidth,behavior:"smooth"});
+  },5000);
+  projectCardSlideTimers.push(timer);
+ });
+}
 function renderProjects(category="all"){
- if(!grid)return;const visible=projects.filter(p=>category==="all"||p.category===category);
+ if(!grid)return;projectCardSlideTimers.forEach(timer=>clearInterval(timer));projectCardSlideTimers=[];const visible=projects.filter(p=>category==="all"||p.category===category);
  if(!visible.length){grid.innerHTML='<div class="empty-state">Belum ada project di kategori ini.</div>';return}
  grid.innerHTML=visible.map(p=>{
  const projectNumber=Math.max(1,projects.findIndex(item=>item.id===p.id)+1);
  const pics=p.images||[];const ratioClass=p.image_aspect_ratio==="9:16"?"ratio-9-16":p.image_aspect_ratio==="1:1"?"ratio-1-1":"ratio-16-9";let gallery="";
- if(pics.length)gallery='<div class="project-art '+ratioClass+'"><img src="'+safeText(pics[0])+'" alt="'+safeText(p.name)+'" loading="lazy"></div><button class="project-preview-trigger" type="button" data-preview-id="'+safeText(p.id)+'">Preview foto</button>';
+ if(pics.length)gallery='<div class="project-gallery swipe '+ratioClass+'" data-project-gallery="' + safeText(p.id) + '" aria-label="Galeri foto ' + safeText(p.name) + '">' + pics.map((src,i)=>'<img src="'+safeText(src)+'" alt="'+safeText(p.name)+' — foto '+(i+1)+'" loading="lazy">').join("") + '</div><button class="project-preview-trigger" type="button" data-preview-id="'+safeText(p.id)+'">Preview foto</button>';
  else gallery='<div class="project-art"><span class="art-label">'+safeText(p.categoryLabel)+'</span><span class="art-monogram">'+safeText(p.art||p.name.slice(0,3).toUpperCase())+'</span></div>';
  const descriptionParts=String(p.description||"").split(/\r?\n/).map(line=>line.trim()).filter(Boolean);const cardParts=descriptionParts.filter(line=>line!=="Panduan Penggunaan DashboardOwner");const cardDescription=cardParts[0]||"";const hasMoreDescription=descriptionParts.length>1;
  return '<article class="project-card">'+gallery+'<div class="project-info"><div class="project-meta"><span>'+safeText(p.categoryLabel)+'</span><span class="project-status">'+safeText(p.status)+'</span></div>'+(p.show_price&&p.price_min!=null&&p.price_max!=null?'<div class="project-price"><span>Price</span><strong>'+new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(p.price_min)+' – '+new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(p.price_max)+'</strong></div>':'')+'<h3>'+safeText(p.name)+'</h3>'+(cardDescription?'<div class="project-description-preview"><p>'+safeText(cardDescription.length>190?cardDescription.slice(0,190).trimEnd()+"…":cardDescription)+'</p>'+(hasMoreDescription?'<button class="description-more" type="button" data-description-id="'+safeText(p.id)+'">Lihat seluruh deskripsi dan cara menggunakannya</button>':'')+'</div>':'')+'<div class="project-links">'+(p.url&&!p.is_private?'<a href="'+safeText(p.url)+'" target="_blank" rel="noopener">View project ↗</a>':(p.is_private?'<span class="project-status">Private project</span>':'<span class="project-status">Preview segera tersedia</span>'))+(p.show_admin_url&&p.admin_url?'<a class="admin-project-link" href="'+safeText(p.admin_url)+'" target="_blank" rel="noopener noreferrer">Admin panel ↗</a>':'')+(p.is_for_sale?'<a class="buy-website-link" href="https://wa.me/6285823538473?text='+encodeURIComponent("Halo LEOOSTORE.id, saya ingin membeli website ini: Project #"+projectNumber+" — "+p.name)+'" target="_blank" rel="noopener">Beli website ↗</a>':'')+'</div></div></article>'
  }).join("");
+ initProjectCardAutoSlides();
 }
 async function loadPublicProjects(){try{
  if(!db)throw new Error("Supabase SDK gagal dimuat. Periksa koneksi CDN atau refresh halaman.");

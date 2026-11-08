@@ -116,3 +116,22 @@ create policy "Admins can delete portfolio thumbnails"
     bucket_id = 'portfolio-thumbnails'
     and exists (select 1 from public.portfolio_admins a where a.user_id = auth.uid())
   );
+
+
+-- Editable homepage trust and benefit content.
+create table if not exists public.portfolio_site_settings (
+  id integer primary key check (id = 1),
+  clients_count integer not null default 0 check (clients_count >= 0),
+  custom_title text not null default 'Custom website',
+  custom_description text not null default 'Website dirancang mengikuti kebutuhan dan identitas brand.',
+  benefits jsonb not null default '["Responsive di berbagai perangkat", "Desain dan fitur fleksibel", "Opsi dashboard admin", "Konsultasi langsung dengan developer"]'::jsonb,
+  updated_at timestamptz not null default now()
+);
+alter table public.portfolio_site_settings enable row level security;
+drop policy if exists "Public can read portfolio site settings" on public.portfolio_site_settings;
+create policy "Public can read portfolio site settings" on public.portfolio_site_settings for select to anon, authenticated using (true);
+drop policy if exists "Admins can manage portfolio site settings" on public.portfolio_site_settings;
+create policy "Admins can manage portfolio site settings" on public.portfolio_site_settings for all to authenticated using (exists (select 1 from public.portfolio_admins a where a.user_id = auth.uid())) with check (exists (select 1 from public.portfolio_admins a where a.user_id = auth.uid()));
+grant select on public.portfolio_site_settings to anon, authenticated;
+grant insert, update, delete on public.portfolio_site_settings to authenticated;
+insert into public.portfolio_site_settings (id) values (1) on conflict (id) do nothing;

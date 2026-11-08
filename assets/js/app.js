@@ -169,3 +169,21 @@ const year=document.querySelector("#year");if(year)year.textContent=new Date().g
   });
  }
 })();
+
+
+/* Tactile photo animation: delegated so Supabase-rendered images are included */
+(function initPhotoTapFeedback(){
+ const roots=[document.querySelector("#projectGrid"),document.querySelector("#homeTestimonialsGrid"),document.querySelector("#testimonialPublicList")].filter(Boolean);
+ roots.forEach(root=>{
+  root.addEventListener("pointerdown",event=>{
+   const img=event.target.closest(".project-art img,.project-gallery img,.testimonial-photo-slide img");
+   if(!img||event.pointerType==="mouse")return;
+   img.classList.remove("photo-tap-feedback");
+   void img.offsetWidth;
+   img.classList.add("photo-tap-feedback");
+  },{passive:true});
+  root.addEventListener("animationend",event=>{
+   if(event.target.matches("img.photo-tap-feedback"))event.target.classList.remove("photo-tap-feedback");
+  });
+ });
+})();

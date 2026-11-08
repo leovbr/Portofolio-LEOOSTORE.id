@@ -110,7 +110,7 @@ function initBrandedVideoPlayers(root){
   update();
  });
 }
-async function loadPublicSiteSettings(){try{if(!db)return;const {data,error}=await db.from("portfolio_site_settings").select("clients_count,custom_title,custom_description,benefits").eq("id",1).maybeSingle();if(error)throw error;if(!data)return;const count=document.querySelector("#heroClientCount");if(count)count.textContent=Number(data.clients_count||0).toLocaleString("id-ID")+"+";const title=document.querySelector(".hero-proof-card:nth-child(2) b");if(title&&data.custom_title)title.textContent=data.custom_title;const desc=document.querySelector(".hero-proof-card:nth-child(2) small");if(desc&&data.custom_description)desc.textContent=data.custom_description;const list=document.querySelector("#heroBenefitList");if(list&&Array.isArray(data.benefits)&&data.benefits.length)list.innerHTML=data.benefits.map(item=>"<li>"+safeText(item)+"</li>").join("")}catch(error){console.warn("Hero settings unavailable:",error)}}
+async function loadPublicSiteSettings(){try{if(!db)return;const {data,error}=await db.from("portfolio_site_settings").select("clients_count,custom_title,custom_description,benefits").eq("id",1).maybeSingle();if(error)throw error;if(!data)return;const count=document.querySelector("#heroClientCount");if(count){count.textContent=Number(data.clients_count||0).toLocaleString("id-ID")+"+";count.dispatchEvent(new Event("hero-count-ready"));}const title=document.querySelector(".hero-proof-card:nth-child(2) b");if(title&&data.custom_title)title.textContent=data.custom_title;const desc=document.querySelector(".hero-proof-card:nth-child(2) small");if(desc&&data.custom_description)desc.textContent=data.custom_description;const list=document.querySelector("#heroBenefitList");if(list&&Array.isArray(data.benefits)&&data.benefits.length)list.innerHTML=data.benefits.map(item=>"<li>"+safeText(item)+"</li>").join("")}catch(error){console.warn("Hero settings unavailable:",error)}}
 const year=document.querySelector("#year");if(year)year.textContent=new Date().getFullYear();loadPublicProjects();loadPublicSiteSettings();
 /* Tap testimonial photos to view the original ratio at viewport size */
 (function initTestimonialMediaLightbox(){
@@ -149,13 +149,12 @@ const year=document.querySelector("#year");if(year)year.textContent=new Date().g
  },{threshold:.18});
  revealTargets.forEach(target=>observer.observe(target));
  const count=document.querySelector("#heroClientCount");
- let countAnimated=false,countRunning=false,countObserver=null;
+ let countAnimated=false,countRunning=false;
  function animateClientCount(){
   if(!count||countAnimated||countRunning)return;
   const target=Number(String(count.textContent).replace(/[^0-9]/g,""))||0;
+  if(target<=0)return;
   countAnimated=true;countRunning=true;
-  if(countObserver){countObserver.disconnect();countObserver=null}
-  if(target<=0){count.textContent="0+";countRunning=false;return}
   const duration=1100,start=performance.now();
   function frame(now){
    const progress=Math.min(1,(now-start)/duration),eased=1-Math.pow(1-progress,3);
@@ -165,10 +164,8 @@ const year=document.querySelector("#year");if(year)year.textContent=new Date().g
   count.textContent="0+";requestAnimationFrame(frame);
  }
  if(count){
-  countObserver=new MutationObserver(()=>{
-   if(!countRunning&&!countAnimated&&!count.closest(".hero-client-proof")?.classList.contains("is-visible"))return;
-   if(!countRunning&&!countAnimated&&count.closest(".hero-client-proof")?.classList.contains("is-visible"))animateClientCount();
+  count.addEventListener("hero-count-ready",()=>{
+   if(count.closest(".hero-client-proof")?.classList.contains("is-visible"))animateClientCount();
   });
-  countObserver.observe(count,{childList:true,characterData:true,subtree:true});
  }
 })();

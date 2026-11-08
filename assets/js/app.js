@@ -110,7 +110,8 @@ function initBrandedVideoPlayers(root){
   update();
  });
 }
-const year=document.querySelector("#year");if(year)year.textContent=new Date().getFullYear();loadPublicProjects();
+async function loadPublicSiteSettings(){try{if(!db)return;const {data,error}=await db.from("portfolio_site_settings").select("clients_count,custom_title,custom_description,benefits").eq("id",1).maybeSingle();if(error)throw error;if(!data)return;const count=document.querySelector("#heroClientCount");if(count)count.textContent=Number(data.clients_count||0).toLocaleString("id-ID")+"+";const title=document.querySelector(".hero-proof-card:nth-child(2) b");if(title&&data.custom_title)title.textContent=data.custom_title;const desc=document.querySelector(".hero-proof-card:nth-child(2) small");if(desc&&data.custom_description)desc.textContent=data.custom_description;const list=document.querySelector("#heroBenefitList");if(list&&Array.isArray(data.benefits)&&data.benefits.length)list.innerHTML=data.benefits.map(item=>"<li>"+safeText(item)+"</li>").join("")}catch(error){console.warn("Hero settings unavailable:",error)}}
+const year=document.querySelector("#year");if(year)year.textContent=new Date().getFullYear();loadPublicProjects();loadPublicSiteSettings();
 /* Tap testimonial photos to view the original ratio at viewport size */
 (function initTestimonialMediaLightbox(){
  const roots=[document.querySelector("#testimonialPublicList"),document.querySelector("#homeTestimonialsGrid")].filter(Boolean);

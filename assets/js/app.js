@@ -149,22 +149,22 @@ const year=document.querySelector("#year");if(year)year.textContent=new Date().g
  },{threshold:.18});
  revealTargets.forEach(target=>observer.observe(target));
  const count=document.querySelector("#heroClientCount");
- let countAnimated=false;
+ let countAnimated=false,countRunning=false;
  function animateClientCount(){
-  if(!count||countAnimated)return;
+  if(!count||countAnimated||countRunning)return;
   const target=Number(String(count.textContent).replace(/[^0-9]/g,""))||0;
-  countAnimated=true;
-  if(target<=0){count.textContent="0+";return}
+  countAnimated=true;countRunning=true;
+  if(target<=0){count.textContent="0+";countRunning=false;return}
   const duration=1100,start=performance.now();
   function frame(now){
    const progress=Math.min(1,(now-start)/duration),eased=1-Math.pow(1-progress,3);
    count.textContent=Math.round(target*eased).toLocaleString("id-ID")+"+";
-   if(progress<1)requestAnimationFrame(frame);
+   if(progress<1)requestAnimationFrame(frame);else countRunning=false;
   }
   count.textContent="0+";requestAnimationFrame(frame);
  }
  if(count){
-  const countObserver=new MutationObserver(()=>{if(count.closest(".hero-client-proof")?.classList.contains("is-visible")){countAnimated=false;animateClientCount()}});
+  const countObserver=new MutationObserver(()=>{if(!countRunning&&count.closest(".hero-client-proof")?.classList.contains("is-visible")){countAnimated=false;animateClientCount()}});
   countObserver.observe(count,{childList:true,characterData:true,subtree:true});
  }
 })();

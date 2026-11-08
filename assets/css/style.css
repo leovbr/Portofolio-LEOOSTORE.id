@@ -264,3 +264,16 @@ body.modal-open{overflow:hidden}
  .media-lightbox{padding:6px}
  .media-lightbox img,.media-lightbox video{max-width:100%;max-height:calc(100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
 }
+
+
+/* Hero proof points / editable portfolio benefits */
+.hero-proof-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:28px 0 20px;max-width:590px}
+.hero-proof-card,.hero-proof-benefits{display:flex;align-items:flex-start;gap:13px;padding:15px 16px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(145deg,#141827d9,#0d111bd9);min-width:0}
+.hero-proof-benefits{grid-column:1/-1}
+.proof-icon{flex:0 0 34px;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#a78bfa1b;color:#c4b5fd;font-size:20px}
+.hero-proof-card strong{display:block;font:700 26px var(--display);line-height:1.15;color:#d9ccff;margin-bottom:3px}
+.hero-proof-card b,.hero-proof-benefits b{display:block;color:#f2efff;font-size:13px;margin:2px 0 5px}
+.hero-proof-card small{display:block;color:#9da5b8;font-size:11px;line-height:1.5}
+.hero-proof-benefits ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 18px;margin:9px 0 0;padding:0;list-style:none}
+.hero-proof-benefits li{font-size:11px;color:#aeb5c8;line-height:1.5}.hero-proof-benefits li:before{content:'✓';color:#b9a6ff;margin-right:7px}
+@media(max-width:650px){.hero-proof-grid{gap:8px;margin:22px 0 16px}.hero-proof-card,.hero-proof-benefits{padding:12px;gap:9px}.proof-icon{width:29px;height:29px;flex-basis:29px;font-size:17px}.hero-proof-card strong{font-size:23px}.hero-proof-card b,.hero-proof-benefits b{font-size:12px}.hero-proof-card small,.hero-proof-benefits li{font-size:10px}.hero-proof-benefits ul{grid-template-columns:1fr;gap:5px}}

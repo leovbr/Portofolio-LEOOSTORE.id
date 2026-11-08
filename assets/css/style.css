@@ -359,3 +359,42 @@ body.modal-open{overflow:hidden}
  .contact-panel{padding:38px 17px}
  .contact-panel h2{font-size:35px}
 }
+
+
+/* Premium motion system: hero reveal, looping benefits, and tactile project photos */
+.hero-proof-card,.hero-proof-benefits,.hero-note,.hero-visual{will-change:transform,opacity}
+.hero-proof-benefits ul{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:7px}
+.hero-proof-benefits li{position:relative;padding-left:19px;opacity:.62;animation:benefitReveal 5.2s ease-in-out infinite;animation-delay:calc(var(--benefit-index,0) * .42s)}
+.hero-proof-benefits li:before{content:"✓";position:absolute;left:0;top:0;color:#9af0d3;font-weight:800;text-shadow:0 0 0 transparent;transition:text-shadow .3s}
+@keyframes benefitReveal{0%,5%{opacity:.62;transform:translateY(3px)}12%,25%{opacity:1;transform:translateY(0)}32%,100%{opacity:.62;transform:translateY(0)}}
+.hero-proof-benefits li:nth-child(1){--benefit-index:0}
+.hero-proof-benefits li:nth-child(2){--benefit-index:1}
+.hero-proof-benefits li:nth-child(3){--benefit-index:2}
+.hero-proof-benefits li:nth-child(4){--benefit-index:3}
+.hero-proof-benefits li:nth-child(n+5){--benefit-index:4}
+.hero-proof-benefits li:nth-child(1),.hero-proof-benefits li:nth-child(2),.hero-proof-benefits li:nth-child(3),.hero-proof-benefits li:nth-child(4){animation-name:benefitReveal}
+.hero-proof-benefits li:nth-child(1):before,.hero-proof-benefits li:nth-child(2):before,.hero-proof-benefits li:nth-child(3):before,.hero-proof-benefits li:nth-child(4):before{animation:checkGlow 5.2s ease-in-out infinite;animation-delay:calc(var(--benefit-index,0) * .42s)}
+@keyframes checkGlow{0%,8%,32%,100%{text-shadow:0 0 0 transparent}14%,24%{text-shadow:0 0 9px #82f0ce,0 0 16px #82f0ce88}}
+.motion-enabled .hero-proof-card,.motion-enabled .hero-proof-benefits,.motion-enabled .hero-note,.motion-enabled .hero-visual{opacity:0;transform:translateY(14px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.2,1)}
+.motion-enabled .hero-proof-card.is-visible,.motion-enabled .hero-proof-benefits.is-visible,.motion-enabled .hero-note.is-visible,.motion-enabled .hero-visual.is-visible{opacity:1;transform:translateY(0)}
+.motion-enabled .hero-proof-card:nth-child(2){transition-delay:.12s}
+.motion-enabled .hero-proof-benefits{transition-delay:.24s}
+.motion-enabled .hero-visual.is-visible .visual-window{animation:visualEnter .85s cubic-bezier(.2,.7,.2,1) both}
+.motion-enabled .hero-visual.is-visible .float-chip{animation:chipEnter .7s ease both,floatDrift 7s ease-in-out 1s infinite}
+.motion-enabled .hero-visual.is-visible .chip-bottom{animation-delay:.15s,1.15s}
+@keyframes visualEnter{from{opacity:0;transform:perspective(1000px) rotateY(-8deg) rotateX(3deg) scale(.96)}to{opacity:1;transform:perspective(1000px) rotateY(-8deg) rotateX(3deg) scale(1)}}
+@keyframes chipEnter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes floatDrift{0%,100%{translate:0 0}50%{translate:0 -5px}}
+.motion-enabled .mock-greeting,.motion-enabled .mock-heading,.motion-enabled .mock-bars,.motion-enabled .mock-cards,.motion-enabled .mock-footer{animation:mockReveal .6s ease both}
+.motion-enabled .mock-heading{animation-delay:.12s}
+.motion-enabled .mock-bars{animation-delay:.22s}
+.motion-enabled .mock-cards{animation-delay:.32s}
+.motion-enabled .mock-footer{animation-delay:.42s}
+@keyframes mockReveal{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.project-art img,.project-gallery img,.testimonial-photo-slide img{transition:transform .22s ease,filter .22s ease}
+.project-art:active img,.project-gallery:active img,.testimonial-photo-slide:active img{transform:scale(.985);filter:brightness(.72)}
+@media(hover:hover) and (pointer:fine){.project-art:hover img,.project-gallery:hover img,.testimonial-photo-slide:hover img{transform:scale(1.025)}}
+@media(prefers-reduced-motion:reduce){
+ .hero-proof-benefits li,.hero-proof-benefits li:before,.motion-enabled .hero-proof-card,.motion-enabled .hero-proof-benefits,.motion-enabled .hero-note,.motion-enabled .hero-visual,.motion-enabled .hero-visual *{animation:none!important;transition:none!important;opacity:1!important;transform:none!important;translate:none!important}
+ .project-art img,.project-gallery img,.testimonial-photo-slide img{transition:none!important}
+}

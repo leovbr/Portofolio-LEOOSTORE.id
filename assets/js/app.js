@@ -131,3 +131,40 @@ const year=document.querySelector("#year");if(year)year.textContent=new Date().g
   content.replaceChildren(full);modal.hidden=false;document.body.classList.add("modal-open");
  }));
 })();
+
+
+/* Hero motion: reveal on entry, count-up from the live Supabase value */
+(function initPortfolioMotion(){
+ const hero=document.querySelector(".hero");
+ if(!hero||!("IntersectionObserver" in window))return;
+ document.documentElement.classList.add("motion-enabled");
+ const revealTargets=[...hero.querySelectorAll(".hero-proof-card,.hero-proof-benefits,.hero-note,.hero-visual")];
+ const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+   if(!entry.isIntersecting)return;
+   const target=entry.target;target.classList.add("is-visible");
+   if(target.matches(".hero-client-proof"))animateClientCount();
+   observer.unobserve(target);
+  });
+ },{threshold:.18});
+ revealTargets.forEach(target=>observer.observe(target));
+ const count=document.querySelector("#heroClientCount");
+ let countAnimated=false;
+ function animateClientCount(){
+  if(!count||countAnimated)return;
+  const target=Number(String(count.textContent).replace(/[^0-9]/g,""))||0;
+  countAnimated=true;
+  if(target<=0){count.textContent="0+";return}
+  const duration=1100,start=performance.now();
+  function frame(now){
+   const progress=Math.min(1,(now-start)/duration),eased=1-Math.pow(1-progress,3);
+   count.textContent=Math.round(target*eased).toLocaleString("id-ID")+"+";
+   if(progress<1)requestAnimationFrame(frame);
+  }
+  count.textContent="0+";requestAnimationFrame(frame);
+ }
+ if(count){
+  const countObserver=new MutationObserver(()=>{if(count.closest(".hero-client-proof")?.classList.contains("is-visible")){countAnimated=false;animateClientCount()}});
+  countObserver.observe(count,{childList:true,characterData:true,subtree:true});
+ }
+})();

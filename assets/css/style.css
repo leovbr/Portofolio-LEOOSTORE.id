@@ -277,3 +277,85 @@ body.modal-open{overflow:hidden}
 .hero-proof-benefits ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 18px;margin:9px 0 0;padding:0;list-style:none}
 .hero-proof-benefits li{font-size:11px;color:#aeb5c8;line-height:1.5}.hero-proof-benefits li:before{content:'✓';color:#b9a6ff;margin-right:7px}
 @media(max-width:650px){.hero-proof-grid{gap:8px;margin:22px 0 16px}.hero-proof-card,.hero-proof-benefits{padding:12px;gap:9px}.proof-icon{width:29px;height:29px;flex-basis:29px;font-size:17px}.hero-proof-card strong{font-size:23px}.hero-proof-card b,.hero-proof-benefits b{font-size:12px}.hero-proof-card small,.hero-proof-benefits li{font-size:10px}.hero-proof-benefits ul{grid-template-columns:1fr;gap:5px}}
+
+
+/* Homepage spacing refinement — tighter rhythm, less unused space */
+.hero{min-height:0;padding-top:66px;padding-bottom:54px;column-gap:42px}
+.hero h1{margin:17px 0;font-size:clamp(43px,5.3vw,68px)}
+.hero-lead{font-size:14px;line-height:1.7;max-width:455px}
+.hero-proof-grid{margin:20px 0 14px;gap:9px}
+.hero-proof-card,.hero-proof-benefits{padding:12px 13px;gap:10px;border-radius:10px}
+.hero-proof-card strong{font-size:23px}
+.hero-proof-card b,.hero-proof-benefits b{font-size:12px}
+.hero-proof-card small,.hero-proof-benefits li{font-size:10px}
+.hero-proof-benefits ul{gap:5px 14px;margin-top:6px}
+.hero-note{margin-top:27px}
+.hero-visual{height:370px}
+.visual-window{height:285px}
+.orbit-a{width:460px;height:250px}
+.orbit-b{width:390px;height:320px}
+.chip-top{top:24px}
+.chip-bottom{bottom:24px}
+.scroll-cue{bottom:12px}
+.strip-inner{min-height:52px}
+.projects-section{padding-top:76px;padding-bottom:76px}
+.section-heading{gap:24px;margin-bottom:25px}
+.section-heading h2{font-size:clamp(31px,3.8vw,43px);margin-top:12px}
+.section-heading>p{font-size:12px;line-height:1.65}
+.filter-row{margin-bottom:17px}
+.project-grid{gap:15px}
+.project-art{height:175px}
+.project-info{padding:15px 16px 17px}
+.project-info h3{font-size:17px;margin:8px 0 5px}
+.project-info p{margin-bottom:11px;min-height:0}
+.project-footnote{margin-top:17px}
+.home-testimonials-section{padding-top:65px;padding-bottom:65px}
+.home-testimonial-grid{gap:14px}
+.home-testimonial-foot{margin-top:16px}
+.contact-section{padding-top:66px;padding-bottom:66px}
+.contact-panel{padding:49px 22px}
+.contact-panel h2{font-size:clamp(34px,4.4vw,50px);margin:13px 0}
+.contact-panel>p{font-size:12px;line-height:1.7;margin-bottom:20px}
+.site-footer .footer-bottom{min-height:55px}
+@media(max-width:850px){
+ .hero{padding-top:55px;padding-bottom:48px;gap:14px}
+ .hero-visual{height:330px}
+ .visual-window{height:270px}
+ .projects-section{padding-top:62px;padding-bottom:62px}
+}
+@media(max-width:650px){
+ .hero{padding-top:42px;padding-bottom:43px;gap:4px}
+ .hero h1{font-size:clamp(39px,10vw,54px);letter-spacing:-2.5px;margin:14px 0}
+ .hero-lead{font-size:13px;line-height:1.65}
+ .hero-proof-grid{margin:17px 0 12px;gap:7px}
+ .hero-proof-card,.hero-proof-benefits{padding:10px;border-radius:9px}
+ .hero-proof-card strong{font-size:21px}
+ .hero-proof-card b,.hero-proof-benefits b{font-size:11px}
+ .hero-proof-card small,.hero-proof-benefits li{font-size:9px}
+ .hero-proof-benefits ul{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 8px}
+ .hero-note{margin-top:19px;font-size:8px;letter-spacing:1.2px}
+ .hero-visual{height:280px;margin-top:2px}
+ .visual-window{height:230px;width:min(440px,92%)}
+ .mock-main{padding:20px}
+ .mock-heading{font-size:26px}
+ .float-chip{padding:9px 11px}
+ .chip-top{top:8px;right:0}
+ .chip-bottom{bottom:8px;left:0}
+ .scroll-cue{display:none}
+ .strip-inner{min-height:46px;gap:9px;justify-content:center;flex-wrap:wrap;padding-block:10px;font-size:8px;letter-spacing:1px}
+ .projects-section,.services-section{padding-top:55px;padding-bottom:55px}
+ .section-heading{display:block;margin-bottom:20px}
+ .section-heading h2{font-size:clamp(29px,7.5vw,38px);margin-top:10px}
+ .section-heading>p{margin-top:10px;font-size:11px}
+ .filter-row{gap:7px;margin-bottom:14px}
+ .filter-chip{padding:7px 11px;font-size:9px}
+ .project-grid{gap:12px}
+ .project-art{height:165px}
+ .project-info{padding:13px}
+ .project-info h3{font-size:16px}
+ .project-footnote{font-size:9px;margin-top:13px}
+ .home-testimonials-section{padding-top:52px;padding-bottom:52px}
+ .contact-section{padding-top:48px;padding-bottom:48px}
+ .contact-panel{padding:38px 17px}
+ .contact-panel h2{font-size:35px}
+}

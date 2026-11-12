@@ -40,9 +40,60 @@ const say=(id,msg)=>$(id).textContent=msg;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const slugify=v=>v.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 function showAuth(){$("authPanel").classList.remove("hidden");$("dashboard").classList.add("hidden")}
-async function verifyAdmin(){const {data,error}=await db.from("portfolio_admins").select("user_id").eq("user_id",currentUser.id).maybeSingle();if(error||!data){await db.auth.signOut();currentUser=null;showAuth();say("authStatus","Akun ini belum terdaftar sebagai admin.");return} $("authPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");await loadCategories();loadProjects();loadTestimonials();loadAdminStats();loadSiteSettings()}
-async function checkSession(){const {data:{session}}=await db.auth.getSession();if(session){currentUser=session.user;await verifyAdmin()}else showAuth()}
-$("authForm").addEventListener("submit",async e=>{e.preventDefault();say("authStatus","Memproses login...");const {data,error}=await db.auth.signInWithPassword({email:$("authEmail").value.trim(),password:$("authPassword").value});if(error){say("authStatus",error.message);return}currentUser=data.user;await verifyAdmin()});
+async function verifyAdmin(){
+  if(!currentUser){showAuth();say("authStatus","Sesi login tidak ditemukan. Silakan login kembali.");return false}
+  say("authStatus","Login berhasil. Memeriksa akses admin...");
+  try{
+    const {data,error}=await db.from("portfolio_admins").select("user_id").eq("user_id",currentUser.id).maybeSingle();
+    if(error){
+      console.error("Admin membership check failed:",error);
+      showAuth();
+      say("authStatus","Login berhasil, tetapi pemeriksaan akses admin gagal: "+error.message+" (kode "+(error.code||"unknown")+"). Coba refresh halaman atau periksa koneksi.");
+      return false;
+    }
+    if(!data){
+      await db.auth.signOut();
+      currentUser=null;
+      showAuth();
+      say("authStatus","Akun berhasil login, tetapi belum terdaftar sebagai admin. Hubungi pemilik proyek.");
+      return false;
+    }
+    $("authPanel").classList.add("hidden");
+    $("dashboard").classList.remove("hidden");
+    say("authStatus","");
+    await loadCategories();
+    await Promise.all([loadProjects(),loadTestimonials(),loadAdminStats(),loadSiteSettings()]);
+    return true;
+  }catch(err){
+    console.error("Admin verification error:",err);
+    showAuth();
+    say("authStatus","Terjadi kesalahan saat membuka dashboard: "+(err?.message||String(err)));
+    return false;
+  }
+}
+async function checkSession(){
+  try{
+    const {data,error}=await db.auth.getSession();
+    if(error)throw error;
+    if(data?.session){currentUser=data.session.user;await verifyAdmin()}
+    else showAuth();
+  }catch(err){console.error("Session check failed:",err);showAuth();say("authStatus","Gagal memeriksa sesi: "+(err?.message||String(err)))}
+}
+$("authForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  say("authStatus","Memproses login...");
+  const submitButton=$("authForm").querySelector('button[type="submit"]');
+  if(submitButton)submitButton.disabled=true;
+  try{
+    const {data,error}=await db.auth.signInWithPassword({email:$("authEmail").value.trim(),password:$("authPassword").value});
+    if(error)throw error;
+    currentUser=data.user;
+    await verifyAdmin();
+  }catch(err){
+    console.error("Admin login failed:",err);
+    say("authStatus","Login gagal: "+(err?.message||String(err)));
+  }finally{if(submitButton)submitButton.disabled=false}
+});
 $("signupBtn").onclick=async()=>{const email=$("authEmail").value.trim(),password=$("authPassword").value;if(!email||password.length<10){say("authStatus","Isi email dan password minimal 10 karakter.");return}say("authStatus","Membuat akun...");const {data,error}=await db.auth.signUp({email,password});if(error){say("authStatus",error.message);return}say("authStatus",data.session?"Akun dibuat. Memeriksa akses admin...":"Akun dibuat. Cek email untuk konfirmasi, lalu login.");if(data.session){currentUser=data.user;await verifyAdmin()}};
 $("logoutBtn").onclick=async()=>{await db.auth.signOut();currentUser=null;showAuth()};
 $("name").addEventListener("input",()=>{if(!$("projectId").value)$("slug").value=slugify($("name").value)});

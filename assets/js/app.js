@@ -142,6 +142,23 @@ function renderWebsitePackages(packages){
  track.onscroll=()=>{if(track._packageFrame)return;track._packageFrame=requestAnimationFrame(()=>{track._packageFrame=0;update()})};
  dots?.querySelectorAll("[data-package-dot]").forEach(dot=>dot.addEventListener("click",()=>{const card=track.querySelectorAll(".package-card")[Number(dot.dataset.packageDot)];card?.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"})}));
  track.querySelectorAll(".package-detail-toggle").forEach(btn=>btn.addEventListener("click",()=>{const extra=btn.nextElementSibling,open=extra.hidden;extra.hidden=!open;btn.setAttribute("aria-expanded",String(open));btn.innerHTML=open?'Tutup Detail <span>⌃</span>':'Lihat Detail <span>⌄</span>'}));
+ track.querySelectorAll(".package-card").forEach(card=>{
+  card.tabIndex=0;
+  card.setAttribute("role","group");
+  card.setAttribute("aria-label","Pilih paket "+(card.querySelector("h3")?.textContent||"website"));
+  card.addEventListener("click",event=>{
+   if(event.target.closest("a"))return;
+   track.querySelectorAll(".package-card").forEach(item=>item.classList.remove("is-selected"));
+   card.classList.add("is-selected");
+   track.querySelectorAll(".package-card").forEach(item=>item.setAttribute("aria-pressed",String(item===card)));
+   card.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});
+  });
+  card.addEventListener("keydown",event=>{
+   if(event.target!==card)return;
+   if(event.key==="Enter"||event.key===" "){event.preventDefault();card.click()}
+  });
+ });
+
  update();requestAnimationFrame(()=>{const first=track.querySelector(".package-card");if(first)track.scrollLeft=0;update()});
 }
 async function loadPublicPackages(){try{if(!db){renderWebsitePackages(defaultWebsitePackages);return}const {data,error}=await db.from("portfolio_site_settings").select("website_packages").eq("id",1).maybeSingle();if(error)throw error;renderWebsitePackages(Array.isArray(data?.website_packages)?data.website_packages:defaultWebsitePackages)}catch(error){console.warn("Website packages unavailable:",error);renderWebsitePackages(defaultWebsitePackages)}}

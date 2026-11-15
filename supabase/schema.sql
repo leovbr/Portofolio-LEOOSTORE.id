@@ -127,6 +127,12 @@ create table if not exists public.portfolio_site_settings (
   benefits jsonb not null default '["Responsive di berbagai perangkat", "Desain dan fitur fleksibel", "Opsi dashboard admin", "Konsultasi langsung dengan developer"]'::jsonb,
   updated_at timestamptz not null default now()
 );
+alter table public.portfolio_site_settings
+  add column if not exists website_packages jsonb not null default '[
+    {"id":"basic","name":"Basic","price":995000,"description":"Paket website sederhana untuk memulai kehadiran digital bisnis Anda.","features":["Landing page 1 halaman","Domain .my.id / .biz.id (1 tahun)","Hosting 500MB–1GB (shared)","Mobile friendly (responsive)"],"enabled":true},
+    {"id":"standard","name":"Standard","price":1995000,"description":"Paket website profesional dengan ruang lebih luas untuk kebutuhan bisnis.","features":["Hingga 5 halaman website","Domain .com / .id (1 tahun)","Hosting 1GB–2GB (shared)","Responsive design","Formulir kontak / WhatsApp"],"enabled":true},
+    {"id":"premium","name":"Premium","price":3495000,"description":"Solusi website lengkap dengan fitur yang dapat disesuaikan.","features":["Hingga 10 halaman website","Domain .com / .id (1 tahun)","Hosting 2GB–5GB (shared)","Custom UI/UX","Dashboard admin","Optimasi SEO dasar"],"enabled":true}
+  ]'::jsonb;
 alter table public.portfolio_site_settings enable row level security;
 drop policy if exists "Public can read portfolio site settings" on public.portfolio_site_settings;
 create policy "Public can read portfolio site settings" on public.portfolio_site_settings for select to anon, authenticated using (true);

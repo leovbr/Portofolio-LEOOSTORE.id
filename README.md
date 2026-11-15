@@ -5,7 +5,9 @@ Public portfolio and project showcase for **LEOOSTORE.id**.
 ## Current structure
 
 - `index.html` — public portfolio homepage
-- `admin.html` — admin setup placeholder (not connected to authentication yet)
+- `admin.html` — admin dashboard
+- `admin-settings.html` — editable hero, benefits, and Basic/Standard/Premium website package settings
+- `assets/js/app.js` — public project cards, package carousel, and category filters
 - `assets/css/style.css` — responsive dark visual system
 - `assets/js/app.js` — initial project cards and category filters
 - `supabase/schema.sql` — initial database tables, RLS policies, and image bucket
@@ -38,7 +40,7 @@ Expected URL:
 6. Connect the public project list and admin dashboard using the Supabase publishable/anon key.
 7. Never put the Supabase service-role key in browser JavaScript.
 
-The current homepage uses sample project data in `assets/js/app.js`. It is not yet reading from Supabase. The admin page is intentionally a setup screen until authentication and database permissions are implemented and tested.
+The homepage reads published projects, testimonials, and site settings from Supabase. Website package cards are stored in `portfolio_site_settings.website_packages` and can be edited from `admin-settings.html` after admin login.
 
 ## Initial project entries
 

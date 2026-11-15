@@ -448,3 +448,18 @@ body.modal-open{overflow:hidden}
 .package-loading,.package-empty{padding:40px 20px;text-align:center;color:#9298aa}
 @media(max-width:650px){.packages-section{padding-top:52px;padding-bottom:55px}.package-carousel-shell{padding:0;margin:0 -18px}.package-track{gap:12px;padding:10px max(18px,calc((100vw - 310px)/2)) 20px}.package-card{flex-basis:min(310px,82vw);min-height:485px;padding:23px 20px 20px;border-radius:16px}.package-card h3{font-size:21px}.package-price{font-size:29px}.package-nav{display:none}.package-description{font-size:11px}.package-features{gap:11px}.package-features li{font-size:11px}.package-note{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.package-card,.package-track{scroll-behavior:auto;transition:none}}
+
+
+/* Interactive selected package glow */
+.package-card{position:relative;isolation:isolate;cursor:pointer;outline:none; -webkit-tap-highlight-color:transparent}
+.package-card:before{content:"";position:absolute;inset:-2px;border-radius:inherit;background:conic-gradient(from 0deg,#8c72e8,#4f9cff,#c06bff,#8c72e8);opacity:0;filter:blur(15px);z-index:-2;transition:opacity .35s ease;pointer-events:none}
+.package-card:after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid transparent;background:linear-gradient(145deg,#171522,#0c0e16) padding-box,linear-gradient(130deg,#8c72e8,#4f9cff,#c06bff) border-box;opacity:0;z-index:-1;transition:opacity .3s ease;pointer-events:none}
+.package-card.is-selected{opacity:1;transform:translateY(-5px) scale(1.015);border-color:#a18be9;box-shadow:0 20px 55px #0008,0 0 24px #9a7cff35,0 0 65px #8c72e825}
+.package-card.is-selected:before{opacity:.78;animation:packageGlowPulse 2.8s ease-in-out infinite}
+.package-card.is-selected:after{opacity:1}
+.package-card:focus-visible{border-color:#b49aff;box-shadow:0 0 0 3px #a18be955,0 0 32px #8c72e855}
+.package-card.is-centered:not(.is-selected){border-color:#7561b5}
+.package-card .package-detail-toggle,.package-card .package-order{position:relative;z-index:1}
+@keyframes packageGlowPulse{0%,100%{filter:blur(13px);opacity:.55}50%{filter:blur(19px);opacity:.95}}
+@media(hover:hover){.package-card:hover:not(.is-selected){opacity:1;transform:translateY(-3px) scale(1.005);border-color:#7969ad;box-shadow:0 15px 40px #0007,0 0 22px #8c72e81c}.package-card:hover:before{opacity:.28}}
+@media(prefers-reduced-motion:reduce){.package-card.is-selected:before{animation:none}.package-card{transition:none}}
